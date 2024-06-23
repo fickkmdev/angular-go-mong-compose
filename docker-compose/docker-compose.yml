@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend  # กำหนด path ที่เก็บ Dockerfile สำหรับ Angular
+    ports:
+      - "80:80"  # Map container port 80 ไปยัง host port 80 (แก้ไขตามที่ต้องการ)
+  
+  backend:
+    build:
+      context: ./backend  # กำหนด path ที่เก็บ Dockerfile สำหรับ Go backend
+    ports:
+      - "8080:8080"  # Map container port 8080 ไปยัง host port 8080 (แก้ไขตามที่ต้องการ)
+    depends_on:
+      - database  # ให้ MongoDB เริ่มต้นก่อน backend
+  
+  database:
+    image: mongo
+    ports:
+      - "27017:27017"  # Map container port 27017 ไปยัง host port 27017 (แก้ไขตามที่ต้องการ)
+    volumes:
+      - mongo_data:/data/db  # ทำให้ข้อมูลของ MongoDB ถูก persist ไว้
+
+volumes:
+  mongo_data:
+    driver: local
